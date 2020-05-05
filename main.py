@@ -45,6 +45,19 @@ def upload_file():
     # todo: process image and get id.
     return render_template('view.html', in_image_name=file_id, out_image_name=file_id)
 
+@app.route('/uploadImage', methods=['POST'])
+def upload_file():
+    file = request.files['file']
+    req_time = time.time()
+    file_id = str(req_time) + '.png'
+    print('File id is:', file_id)
+    full_in_path = os.path.join(in_images_dir, file_id)
+    full_out_path = os.path.join(out_images_dir, file_id)
+    file.save(full_in_path)
+    process(global_model, full_in_path, full_out_path)
+    # todo: process image and get id.
+    return send_from_directory('out_images', file_id)
+
 
 @app.route('/view', methods=['GET'])
 def view_images():
