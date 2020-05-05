@@ -1,7 +1,7 @@
 import utility
 from option import args
 import model as _model
-
+from flask_cors import CORS
 import numpy as np
 import torch
 import imageio
@@ -12,7 +12,7 @@ import time
 import base64
 
 app = Flask(__name__, template_folder='www')
-
+CORS(app)
 in_images_dir = 'in_images'
 out_images_dir = 'out_images'
 global_model = None
