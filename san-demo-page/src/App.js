@@ -15,6 +15,7 @@ const submitImage = (input) => {
   var preview = $("#beforeImg")
   var file    = document.querySelector('input[type=file]').files[0];
   var reader  = new FileReader();
+  startLoading()
 
   reader.onloadend = function () {
     console.log("LOADED")
@@ -30,20 +31,27 @@ const submitImage = (input) => {
 };
 
 const fetchGeneratedResource = (file) => {
+  var reader  = new FileReader();
   let fd = new FormData();
+  var afterView = $("#afterImg")
   fd.append("file", file);
   console.log(file)
+  reader.onloadend = function () {
+    afterView.attr("src", reader.result)
+    finishLoading()
+  }
   fetch('http://54.193.204.208:8080/uploadImage', {
     method: 'POST', // or 'PUT'
     headers: {
-      'Content-Type': 'application/json',
       'Access-Control-Allow-Origin': '*'
     },
     body: fd
   }).then((response)=> {
-    return response.json()
-  }).then(data => {
-    console.log(data)
+    return new Response(response.body)
+  }).then(res => {
+    return res.blob()
+  }).then(blob => {
+    reader.readAsDataURL(blob);
   })
 }
 
@@ -77,7 +85,14 @@ const moveHandler = (e) => {
   // 让滑动条的 left 和左边图片宽度 都等于坐标，即可以达到跟随效果；
 }
 
-const finishLoading = (e) => {
+const startLoading = () => {
+  const placeHolder = $("#placeHolder")
+  const resultView = $("#resultView")
+  placeHolder.show()
+  resultView.hide()
+}
+
+const finishLoading = () => {
   const placeHolder = $("#placeHolder")
   const resultView = $("#resultView")
   placeHolder.hide()
@@ -87,36 +102,17 @@ const finishLoading = (e) => {
 
 
 function App() {
-  setTimeout(()=> {
-    finishLoading()
-  }, 3000)
   return (
     <div className="App">
       <header className="App-header">
         <div className="uploadForm">
           <Segment className="segment">
-            {/* <Header icon>
-              <Icon name='pdf file outline' />
-              Please upload an image
-            </Header> */}
-
             <Button primary onClick={mockClick}>Upload Image</Button>
           </Segment>
         </div>
 
-        {/* <div id="inputImg" className="InputImage" hidden>
-            <img id="uploadImg" className="in-img" src={inputImageSrc} style={{width:"100%", objectFit: "contain"}}/>
-        </div>
-        <img id="arrow" className="arrow" src={arrow} alt="arrow" hidden/>
-        <div id="genImg" className="generatedImage" hidden>
-            {loading? (<Placeholder className="customMaxWidth">
-              <Placeholder.Image square />
-            </Placeholder>):(<img id="gImg" className="gen-image" src={outputImageSrc} style={{width:"100%", objectFit: "contain"}}/>)}
-        </div> */}
-
-
       <div class="container">
-        <Placeholder id="placeHolder" style={{width:document.documentElement.clientWidth, height:document.documentElement.clientHeight}} className="customMaxWidth">
+        <Placeholder id="placeHolder" style={{width:document.documentElement.clientWidth, height:document.documentElement.clientHeight}} className="customMaxWidth" hidden>
           <Placeholder.Image />
         </Placeholder>
         <div id="resultView" class="slider-wrap" hidden>
