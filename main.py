@@ -1,13 +1,21 @@
 import utility
-import model
 from option import args
+import model as _model
 
 import numpy as np
 import torch
 import imageio
 
-torch.manual_seed(args.seed)
-checkpoint = utility.checkpoint(args)
+from flask import Flask, request, render_template, send_from_directory
+import os
+import time
+import base64
+
+app = Flask(__name__, template_folder='www')
+
+in_images_dir = 'in_images'
+out_images_dir = 'out_images'
+global_model = None
 
 
 def process(model, in_path, out_path):
@@ -24,7 +32,66 @@ def process(model, in_path, out_path):
     imageio.imsave(out_path, sr)
 
 
-if checkpoint.ok:
-    model = model.Model(args, checkpoint)
+@app.route('/upload', methods=['POST'])
+def upload_file():
+    file = request.files['file']
+    req_time = time.time()
+    file_id = str(req_time) + '.png'
+    print('File id is:', file_id)
+    full_in_path = os.path.join(in_images_dir, file_id)
+    full_out_path = os.path.join(out_images_dir, file_id)
+    file.save(full_in_path)
+    process(global_model, full_in_path, full_out_path)
+    # todo: process image and get id.
+    return render_template('view.html', in_image_name=file_id, out_image_name=file_id)
 
-    process(model, './images/in.png', './images/out.png')
+
+@app.route('/view', methods=['GET'])
+def view_images():
+    file_id = request.args.get('id')
+    return render_template('view.html', in_image_name=file_id, out_image_name=file_id)
+
+
+@app.route('/', methods=['GET'])
+def index():
+    return render_template('index.html')
+
+
+@app.route('/out_images/<path:path>')
+def static_out(path):
+    return send_from_directory('out_images', path)
+
+
+@app.route('/in_images/<path:path>')
+def static_in(path):
+    return send_from_directory('in_images', path)
+
+
+def setup():
+    torch.manual_seed(args.seed)
+    checkpoint = utility.checkpoint(args)
+    if checkpoint.ok:
+        s1 = time.time()
+        model = _model.Model(args, checkpoint)
+        s2 = time.time()
+        print('load model time:', s2 - s1)
+    else:
+        print("load model error")
+        exit(-1)
+
+    if not os.path.isdir(in_images_dir):
+        os.mkdir(in_images_dir)
+    if not os.path.isdir(out_images_dir):
+        os.mkdir(out_images_dir)
+
+    return model
+
+
+if __name__ == '__main__':
+    global_model = setup()
+    listen_port = 8080
+    if args.listen_port:
+        listen_port = args.listen_port
+
+    print("start server listen at:", listen_port)
+    app.run(port=listen_port, debug=True, host='0.0.0.0')

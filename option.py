@@ -17,6 +17,8 @@ parser.add_argument('--n_GPUs', type=int, default=1,
                     help='number of GPUs')
 parser.add_argument('--seed', type=int, default=1,
                     help='random seed')
+parser.add_argument('--listen_port', type=int, default=8080,
+                    help='flask listen port')
 
 # Data specifications
 parser.add_argument('--dir_data', type=str, default='/home/daitao/code_158/superresolution/SR_dataset',
