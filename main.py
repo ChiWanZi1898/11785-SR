@@ -46,7 +46,7 @@ def upload_file():
     return render_template('view.html', in_image_name=file_id, out_image_name=file_id)
 
 @app.route('/uploadImage', methods=['POST'])
-def upload_file():
+def upload_file_api():
     file = request.files['file']
     req_time = time.time()
     file_id = str(req_time) + '.png'
