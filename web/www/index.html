@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+    <title>Document</title>
+</head>
+<body>
+<h1>Hello world</h1>
+<form
+        enctype="multipart/form-data"
+        action="/upload"
+        method="post"
+>
+    <input type="file" name="file"/>
+    <input type="submit" value="upload"/>
+
+    <ul>
+        <li><a href="/view?id=example1">Example 1</a></li>
+        <li><a href="/view?id=example2">Example 2</a></li>
+        <li><a href="/view?id=example3">Example 3</a></li>
+        <li><a href="/view?id=example4">Example 4</a></li>
+    </ul>
+
+</form>
+</body>
+</html>
