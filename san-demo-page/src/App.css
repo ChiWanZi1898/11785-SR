@@ -1,0 +1,147 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #000000;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.segment {
+  background-color: black !important;
+}
+
+.uploadForm {
+  /* position: absolute; */
+  width: 100%;
+  /* margin-top: 20px; */
+  /* left: 5% */
+}
+
+.InputImage {
+  position: absolute;
+  top: 30%;
+  width: 35%;
+  left: 5%;
+  background-color: white;
+}
+
+.generatedImage {
+  position: absolute;
+  top: 30%;
+  width: 35%;
+  right: 5%;
+  background-color: white;
+}
+
+.customMaxWidth {
+  max-width: 1000rem !important;
+}
+
+.arrow {
+  position: absolute;
+  top: 50%;
+  left: 47%;
+  width: 100px;
+  height: 100px;
+}
+
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+.container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.slider-wrap {
+  position: relative;
+}
+.slider-wrap img {
+  display: block;
+  width: 1080px;
+  user-select: none;
+  /* 取消图片被选中 */
+}
+.slider-wrap .before-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  overflow: hidden;
+}
+.slider-wrap .handler {
+  display: block;
+  width: 5px;
+  height: 100%;
+  background-color: rgba(0, 0, 0, .3);
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+  cursor: ew-resize;
+  /* cursor: ew-resize; 鼠标样式，左右滑动 */
+}
+.slider-wrap .handler::after {
+  width: 64px;
+  height: 64px;
+  background-color: rgba(0, 0, 0, .5);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  content: '\2b0c';
+  color: white;
+  font-size: 50px;
+  text-align: center;
+  line-height: 64px;
+  border-radius: 50%;
+  box-shadow: 0 2px 6px #000;
+  transition: all .3s ease;
+}
+.slider-wrap .handler:hover::after {
+  width: 40px;
+  height: 40px;
+  font-size: 30px;
+  line-height: 40px;
+}
+
+.preventDragging {
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
